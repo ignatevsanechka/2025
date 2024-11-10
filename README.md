@@ -7,12 +7,12 @@
 configure
 
 int gi1/0/3
-ip address 172.16.4.1/28
+ip address 192.168.1.1/28
 ip firewall disable
 no shutdown
 
 int gi1/0/2
-ip address 172.16.5.1/28
+ip address 192.168.2.1/28
 ip firewall disable
 no shutdown
 
@@ -28,7 +28,7 @@ confirm
 
 ```
 int TO-ISP
-ip address 172.16.4.2/28
+ip address 192.168.1.2/28
 no shutdown
 ```
 
@@ -51,15 +51,15 @@ connect ip interface TO-ISP
 ```
 interface HQ-SRV
  ip mtu 1500
- ip address 192.168.0.1/26
+ ip address 172.16.0.2/26
 !
 interface HQ-CLI
  ip mtu 1500
- ip address 192.168.0.65/28
+ ip address 172.16.0.66/28
 !
 interface HQ-MGMT
  ip mtu 1500
- ip address 192.168.0.81/29
+ ip address 172.16.0.82/29
 !
 ```
 
@@ -97,14 +97,14 @@ port ge1
 ```
 interface tunnel.1
  ip mtu 1400
- ip address 172.16.1.1/30
- ip tunnel 172.16.4.2 172.16.5.2 mode gre
+ ip address 10.0.0.1/30
+ ip tunnel 192.168.1.2 192.168.2.2 mode gre
 ```
 
 Задаем маршрут по умолчанию в сторону ISP
 
 ```
-ip route 0.0.0.0/0 172.16.4.1
+ip route 0.0.0.0/0 192.168.1.1
 ```
 
 ## HQ-SRV
@@ -118,11 +118,11 @@ CONFIG_IPv4=yes" > /etc/net/ifaces/ens192/options
 ```
 
 ```
-echo 192.168.0.2/26 > /etc/net/ifaces/ens192/ipv4address
+echo 172.16.0.3/26 > /etc/net/ifaces/ens192/ipv4address
 ```
 
 ```
-echo default via 192.168.0.1 > /etc/net/ifaces/ens192/ipv4route
+echo default via 172.16.0.2 > /etc/net/ifaces/ens192/ipv4route
 ```
 
 ```
@@ -149,24 +149,24 @@ configure
 
 interface gigabitethernet 1/0/1
   ip firewall disable
-  ip address 172.16.5.2/28
+  ip address 192.168.2.2/28
   no shutdown
 exit
 interface gigabitethernet 1/0/2
   ip firewall disable
-  ip address 192.168.1.1/27
+  ip address 172.16.1.3/27
   no shutdown
 exit
 tunnel gre 1
   ttl 16
   mtu 1400
   ip firewall disable
-  local address 172.16.5.2
-  remote address 172.16.4.2
-  ip address 172.16.1.2/30
+  local address 192.168.2.2
+  remote address 192.168.1.2
+  ip address 10.0.0.2/30
   enable
 exit
-ip route 0.0.0.0/0 172.16.5.1
+ip route 0.0.0.0/0 192.168.2.1
 
 commit
 confirm
@@ -183,15 +183,15 @@ CONFIG_IPv4=yes" > /etc/net/ifaces/ens192/options
 ```
 
 ```
-echo 192.168.1.2/26 > /etc/net/ifaces/ens192/ipv4address
+echo 172.16.1.4/26 > /etc/net/ifaces/ens192/ipv4address
 ```
 
 ```
-echo default via 192.168.1.1 > /etc/net/ifaces/ens192/ipv4route
+echo default via 172.16.1.3 > /etc/net/ifaces/ens192/ipv4route
 ```
 
 ```
-echo nameserver 192.168.0.2 > /etc/net/ifaces/ens192/resolv.conf
+echo nameserver 172.16.0.3 > /etc/net/ifaces/ens192/resolv.conf
 ```
 
 ```
